@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Only Scout Lua - 下载页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .back-button {
+            display: inline-block;
+            margin-bottom: 30px;
+            padding: 10px 20px;
+            background: #4facfe;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        
+        .back-button:hover {
+            background: #00f2fe;
+        }
+        
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4facfe;
+        }
+        
+        .version {
+            color: #999;
+            margin-bottom: 30px;
+        }
+        
+        .description {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .description h3 {
+            color: #4facfe;
+            margin-bottom: 10px;
+        }
+        
+        .features {
+            margin: 30px 0;
+            padding-left: 20px;
+        }
+        
+        .features li {
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+        
+        .download-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s;
+            margin: 20px 0;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.02);
+        }
+        
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-button">← 返回首页</a>
+        
+        <h1>🔫 Only Scout Lua</h1>
+        <div class="version">版本：v1.0 | 最后更新：2026-01-04</div>
+        
+        <div class="description">
+            <h3>📖 脚本说明</h3>
+            <p>Only Scout Lua 专为Scout狙击枪优化的综合辅助脚本，提供全面的狙击辅助功能。</p>
+        </div>
+        
+        <h3>✨ 主要功能</h3>
+        <ul class="features">
+            <li>✓ 开镜无延迟射击</li>
+            <li>✓ 自动快速切枪连狙模式</li>
+            <li>✓ 精准弹道预测系统</li>
+            <li>✓ 一键开启/关闭热键</li>
+            <li>✓ 敌人轮廓高亮显示</li>
+            <li>✓ 自定义配置保存</li>
+        </ul>
+        
+        <h3>📦 下载文件</h3>
+        <a href="#" class="download-btn" id="downloadBtn2">⬇ 下载 Only Scout Lua (only_scout.lua)</a>
+        
+        <div class="info">
+            💡 提示：点击下载按钮即可获取Lua脚本文件。使用前请确保您已安装对应的加载器。
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('downloadBtn2').addEventListener('click', function(e) {
+            e.preventDefault();
+            // 创建Lua文件内容
+            const luaContent = `-- Only Scout Lua v1.0
+-- 作者：NEVERLOSE Team
+-- 功能：Scout狙击枪综合辅助脚本
+
+local only_scout = {
+    enabled = true,
+    fast_scope = true,
+    auto_shot = false,
+    hotkey = "F1"
+}
+
+function on_paint()
+    if not only_scout.enabled then return end
+    -- 快速开镜逻辑
+    if only_scout.fast_scope then
+        -- 取消开镜动画延迟
+    end
+    
+    -- 自动射击逻辑
+    if only_scout.auto_shot then
+        -- 自动寻找目标射击
+    end
+end
+
+function on_key_press(key)
+    if key == only_scout.hotkey then
+        only_scout.enabled = not only_scout.enabled
+        print("Only Scout Lua 状态: " .. tostring(only_scout.enabled))
+    end
+end
+
+print("Only Scout Lua 加载成功！按 " .. only_scout.hotkey .. " 开启/关闭")
+`;
+            
+            // 创建Blob并下载
+            const blob = new Blob([luaContent], {type: 'text/plain'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'only_scout.lua';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('开始下载 Only Scout Lua！');
+        });
+    </script>
+</body>
+</html>
