@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Only Scout Lua - 下载页面</title>
+    <title>整合Lua - Chimera/Ext/Genesis 三合一辅助脚本</title>
     <style>
         * {
             margin: 0;
@@ -12,191 +12,284 @@
         }
         
         body {
-            font-family: 'Arial', 'Microsoft YaHei', sans-serif;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            font-family: 'Courier New', 'Monaco', monospace;
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a0033 50%, #0a0a0a 100%);
             min-height: 100vh;
             padding: 20px;
+            color: #00d4ff;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 950px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.88);
+            border: 2px solid #00d4ff;
+            border-radius: 15px;
+            padding: 45px;
+            box-shadow: 0 0 40px rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(2px);
         }
         
         .back-button {
             display: inline-block;
             margin-bottom: 30px;
             padding: 10px 20px;
-            background: #4facfe;
-            color: white;
+            background: linear-gradient(135deg, #00d4ff 0%, #0088aa 100%);
+            color: #000;
             text-decoration: none;
             border-radius: 8px;
-            transition: background 0.3s;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 10px rgba(0,212,255,0.5);
         }
         
         .back-button:hover {
-            background: #00f2fe;
+            background: linear-gradient(135deg, #ff00ff 0%, #aa0088 100%);
+            color: #fff;
+            box-shadow: 0 0 20px #ff00ff;
+            transform: translateX(-5px);
         }
         
         h1 {
-            font-size: 36px;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #4facfe;
+            font-size: 48px;
+            color: #00d4ff;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px #00d4ff;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            color: #ff00aa;
+            margin-bottom: 30px;
+            font-size: 16px;
+            border-bottom: 1px solid #00d4ff;
+            padding-bottom: 15px;
+            letter-spacing: 1px;
         }
         
         .version {
-            color: #999;
+            color: #888;
+            margin-bottom: 25px;
+            font-size: 12px;
+        }
+        
+        .integrate-badge {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid #00d4ff;
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #00d4ff;
         }
         
         .description {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(255,0,170,0.05) 100%);
+            padding: 25px;
+            border-left: 4px solid #00d4ff;
             margin-bottom: 30px;
-            line-height: 1.6;
+            line-height: 1.8;
+            border-radius: 8px;
         }
         
         .description h3 {
-            color: #4facfe;
-            margin-bottom: 10px;
+            color: #ff00aa;
+            margin-bottom: 15px;
+            font-size: 20px;
         }
         
         .features {
-            margin: 30px 0;
-            padding-left: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 35px 0;
         }
         
-        .features li {
+        .feature-category {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #00d4ff;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .feature-category:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,212,255,0.2);
+            border-color: #ff00aa;
+        }
+        
+        .feature-category h4 {
+            color: #ff00aa;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-bottom: 1px dashed #00d4ff;
+            padding-bottom: 8px;
+        }
+        
+        .feature-category ul {
+            list-style: none;
+        }
+        
+        .feature-category li {
             margin: 10px 0;
-            line-height: 1.5;
+            line-height: 1.4;
+            font-size: 13px;
+            color: #ccc;
+        }
+        
+        .feature-category li:before {
+            content: "✦";
+            color: #00d4ff;
+            font-weight: bold;
+            margin-right: 10px;
         }
         
         .download-btn {
             display: block;
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
+            padding: 20px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0088aa 50%, #00d4ff 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+            color: #000;
             text-align: center;
             text-decoration: none;
             border-radius: 10px;
-            font-size: 18px;
+            font-size: 22px;
             font-weight: bold;
-            transition: transform 0.3s;
-            margin: 20px 0;
+            transition: all 0.3s;
+            margin: 30px 0;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+            100% { background-position: 0% 0%; }
         }
         
         .download-btn:hover {
             transform: scale(1.02);
+            box-shadow: 0 0 30px #00d4ff;
+            background: linear-gradient(135deg, #ff00aa 0%, #aa0088 100%);
+            color: #fff;
+            animation: none;
         }
         
-        .info {
-            background: #e7f3ff;
+        .package-info {
+            background: rgba(0, 212, 255, 0.08);
             padding: 15px;
             border-radius: 8px;
             margin-top: 20px;
-            font-size: 14px;
-            color: #666;
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            border: 1px dashed #00d4ff;
+        }
+        
+        .package-info span {
+            color: #ff00aa;
+            font-weight: bold;
         }
         
         @media (max-width: 600px) {
             .container {
-                padding: 20px;
+                padding: 25px;
             }
-            
             h1 {
-                font-size: 24px;
+                font-size: 28px;
+            }
+            .features {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="index.html" class="back-button">← 返回首页</a>
+        <a href="Main.html" class="back-button">← 返回首页</a>
         
-        <h1>🔫 Only Scout Lua</h1>
-        <div class="version">版本：v1.0 | 最后更新：2026-01-04</div>
+        <h1>⚡ 整合 Lua</h1>
+        <div class="subtitle">Chimera · Ext · Genesis | 三合一终极整合包</div>
+        <div class="version">版本：v3.0 | 最后更新：2026-01-04 | 由 Yuuuu888 整合优化</div>
         
-        <div class="description">
-            <h3>📖 脚本说明</h3>
-            <p>Only Scout Lua 专为Scout狙击枪优化的综合辅助脚本，提供全面的狙击辅助功能。</p>
+        <div class="integrate-badge">
+            <span class="badge">🐉 Chimera</span>
+            <span class="badge">🔮 Ext</span>
+            <span class="badge">✨ Genesis</span>
+            <span class="badge">⚡ 一键部署</span>
         </div>
         
-        <h3>✨ 主要功能</h3>
-        <ul class="features">
-            <li>✓ 开镜无延迟射击</li>
-            <li>✓ 自动快速切枪连狙模式</li>
-            <li>✓ 精准弹道预测系统</li>
-            <li>✓ 一键开启/关闭热键</li>
-            <li>✓ 敌人轮廓高亮显示</li>
-            <li>✓ 自定义配置保存</li>
-        </ul>
+        <div class="description">
+            <h3>📖 整合包说明</h3>
+            <p>三大顶级Lua脚本整合包 — <strong style="color:#00d4ff">Chimera alpha</strong>、<strong style="color:#ff00aa">Extension</strong>、<strong style="color:#00d4ff">Genesis</strong> 完美融合。<br>
+            由 Yuuuu888 精心整合优化，提供前所未有的CS:GO辅助体验。高度自定义Anti-Aim系统、丰富的视觉特效、全面的杂项功能，一键加载全部功能！</p>
+        </div>
         
-        <h3>📦 下载文件</h3>
-        <a href="#" class="download-btn" id="downloadBtn2">⬇ 下载 Only Scout Lua (only_scout.lua)</a>
+        <div class="features">
+            <div class="feature-category">
+                <h4>🎯 Anti-Aim 反自瞄系统</h4>
+                <ul>
+                    <li>智能假身抖动 (Jitter/Break)</li>
+                    <li>自定义角度/偏移量</li>
+                    <li>基于目标的方向Anti-Aim</li>
+                    <li>全状态</li>
+                    <li>快速停止/恢复热键</li>
+                    <li>混合模式 (Static+Dynamic)</li>
+                </ul>
+            </div>
+            
+            <div class="feature-category">
+                <h4>👁️ 视觉增强</h4>
+                <ul>
+                    <li>各种视觉指示器</li>
+                    <li>手雷/子弹轨迹预测</li>
+                    <li>自定义UI界面主题</li>
+                    <li>Hit-Sound & 命中标记</li>
+                </ul>
+            </div>
+            
+            <div class="feature-category">
+                <h4>🔧 杂项功能</h4>
+                <ul>
+                    <li>一键投掷物<li>
+                    <li>配置保存</li>
+                </ul>
+            </div>
+        </div>
         
-        <div class="info">
-            💡 提示：点击下载按钮即可获取Lua脚本文件。使用前请确保您已安装对应的加载器。
+        <h3>📦 整合包内容</h3>
+        <div class="package-info">
+            📁 包含文件：<span>chimera.lua</span> + <span>ext.lua</span> + <span>genesis.lua</span><br>
+            ⚙️ 附带配置示例 + 使用说明文档<br>
+            💾 总大小：约 2.5 MB | 支持版本：CS:GO Neverlose 
+        </div>
+        
+        <button class="download-btn" id="verifyBtn">⬇ 下载 3 Luas 整合包 ⬇</button>
+        
+        <div class="package-info">
+            🔐 点击后将跳转验证页面 | 完成几何题即可获取下载链接
         </div>
     </div>
     
     <script>
-        document.getElementById('downloadBtn2').addEventListener('click', function(e) {
-            e.preventDefault();
-            // 创建Lua文件内容
-            const luaContent = `-- Only Scout Lua v1.0
--- 作者：NEVERLOSE Team
--- 功能：Scout狙击枪综合辅助脚本
-
-local only_scout = {
-    enabled = true,
-    fast_scope = true,
-    auto_shot = false,
-    hotkey = "F1"
-}
-
-function on_paint()
-    if not only_scout.enabled then return end
-    -- 快速开镜逻辑
-    if only_scout.fast_scope then
-        -- 取消开镜动画延迟
-    end
-    
-    -- 自动射击逻辑
-    if only_scout.auto_shot then
-        -- 自动寻找目标射击
-    end
-end
-
-function on_key_press(key)
-    if key == only_scout.hotkey then
-        only_scout.enabled = not only_scout.enabled
-        print("Only Scout Lua 状态: " .. tostring(only_scout.enabled))
-    end
-end
-
-print("Only Scout Lua 加载成功！按 " .. only_scout.hotkey .. " 开启/关闭")
-`;
-            
-            // 创建Blob并下载
-            const blob = new Blob([luaContent], {type: 'text/plain'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'only_scout.lua';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            alert('开始下载 Only Scout Lua！');
+        document.getElementById('verifyBtn').addEventListener('click', function() {
+            window.location.href = 'verify2.html';
         });
     </script>
 </body>
