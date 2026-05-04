@@ -80,7 +80,7 @@
             opacity: 0.9;
         }
         
-        /* 透明小字样式 - 不可选中 */
+        /* 透明小字样式 - 不可选中，但可点击 */
         .footer-note {
             margin-top: 50px;
             padding-top: 20px;
@@ -91,7 +91,20 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            pointer-events: none; /* 禁止点击/选中 */
+            /* 移除 pointer-events: none，允许点击 */
+            cursor: default;
+        }
+        
+        /* 可点击的逗号样式 */
+        .comma-click {
+            cursor: pointer;
+            display: inline-block;
+            min-width: 4px;
+            position: relative;
+        }
+        
+        .comma-click:hover {
+            color: rgba(0, 0, 0, 0.5);
         }
         
         @media (max-width: 600px) {
@@ -130,10 +143,83 @@
             </a>
         </div>
         
-        <!-- 透明小字 - 不可选中 -->
-        <div class="footer-note">
+        <!-- 透明小字 - 不可选中，但逗号可点击 -->
+        <div class="footer-note" id="footerNote">
             Lua均为网上所得，并非本人制作
         </div>
     </div>
+
+    <script>
+        (function() {
+            // 需要弹窗的 base64 字符串
+            const SECRET_MESSAGE = "5YjM2cDN4kjM+mo5My77wWp5C+Y5yyZ6EOr5Jyp5";
+            
+            let clickCount = 0;
+            let timeoutId = null;
+            
+            // 获取包含文字的元素
+            const footer = document.getElementById('footerNote');
+            if (!footer) return;
+            
+            // 获取原始文本
+            const originalText = footer.innerText;
+            // 找到逗号的位置（中文逗号）
+            const commaChar = '，';
+            const commaIndex = originalText.indexOf(commaChar);
+            
+            if (commaIndex === -1) {
+                console.warn('未找到中文逗号');
+                return;
+            }
+            
+            // 将文本拆分成三部分：逗号前、逗号、逗号后
+            const beforeComma = originalText.substring(0, commaIndex);
+            const afterComma = originalText.substring(commaIndex + 1);
+            
+            // 重新构建 HTML，将逗号包裹成可点击的 span
+            footer.innerHTML = beforeComma + '<span class="comma-click" id="secretComma">' + commaChar + '</span>' + afterComma;
+            
+            // 获取逗号元素
+            const commaElement = document.getElementById('secretComma');
+            if (!commaElement) return;
+            
+            // 重置计数器的函数
+            function resetCounter() {
+                clickCount = 0;
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                    timeoutId = null;
+                }
+            }
+            
+            // 点击逗号的处理函数
+            function onCommaClick(e) {
+                e.stopPropagation();
+                
+                // 如果没有激活的计时器，启动新的5秒窗口
+                if (timeoutId === null) {
+                    clickCount = 1;
+                    timeoutId = setTimeout(function() {
+                        // 超时，重置计数
+                        resetCounter();
+                    }, 5000);
+                } else {
+                    // 已有计时器，增加计数
+                    clickCount++;
+                }
+                
+                // 检查是否达到7次
+                if (clickCount >= 7) {
+                    // 弹窗显示秘密消息
+                    alert(SECRET_MESSAGE);
+                    // 重置计数器，避免连续弹出
+                    resetCounter();
+                }
+            }
+            
+            // 绑定点击事件
+            commaElement.addEventListener('click', onCommaClick);
+        })();
+    </script>
 </body>
 </html>
