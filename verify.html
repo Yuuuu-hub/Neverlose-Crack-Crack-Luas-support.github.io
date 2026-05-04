@@ -40,7 +40,7 @@
         }
         
         .canvas-area {
-            background: #111;
+            background: #0a0a1a;
             border: 1px solid #00ff41;
             border-radius: 10px;
             margin: 20px 0;
@@ -48,7 +48,7 @@
         }
         
         canvas {
-            background: #1a1a2a;
+            background: #0a0a1a;
             display: block;
             margin: 0 auto;
             border-radius: 5px;
@@ -175,6 +175,7 @@
         .confirm-btn {
             background: #ff0000;
             color: #fff;
+            cursor: pointer;
         }
         
         .confirm-btn:hover {
@@ -189,7 +190,7 @@
         <p style="color: #888; margin-bottom: 10px;">请根据图形计算角度</p>
         
         <div class="canvas-area">
-            <canvas id="geometryCanvas" width="600" height="350" style="width:600px;height:350px"></canvas>
+            <canvas id="geometryCanvas" width="600" height="300" style="width:600px;height:300px"></canvas>
         </div>
         
         <div class="question" id="question">
@@ -210,46 +211,44 @@
     </div>
 
     <script>
-        // 平行线角度计算题库 (带绘图函数)
+        // 平行线角度计算题库 (修正版绘图)
         const questions = [
             {
                 text: "如图，已知直线a ∥ b，∠1 = 130°，求∠2的度数？",
                 answer: "50",
                 draw: function(ctx, w, h) {
-                    // 绘制两条平行线
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
+                    ctx.fillStyle = "#00ff41";
                     ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
                     // 直线a (上)
                     ctx.beginPath();
-                    ctx.moveTo(50, 100);
-                    ctx.lineTo(550, 100);
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
                     ctx.stroke();
-                    ctx.fillStyle = "#00ff41";
-                    ctx.font = "16px monospace";
-                    ctx.fillText("a", 30, 95);
+                    ctx.fillText("a", 60, 95);
+                    
                     // 直线b (下)
                     ctx.beginPath();
-                    ctx.moveTo(50, 250);
-                    ctx.lineTo(550, 250);
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
                     ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    // 画截线
+                    ctx.fillText("b", 60, 215);
+                    
+                    // 截线
                     ctx.beginPath();
-                    ctx.moveTo(200, 50);
-                    ctx.lineTo(400, 300);
+                    ctx.moveTo(200, 30);
+                    ctx.lineTo(400, 290);
                     ctx.stroke();
-                    // 标注∠1 (130°)
-                    ctx.beginPath();
-                    ctx.arc(290, 150, 25, Math.atan2(100,90), Math.atan2(100,90)+Math.PI/3);
-                    ctx.stroke();
+                    
+                    // ∠1 标注
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 130°", 270, 130);
-                    // 标注∠2
-                    ctx.beginPath();
-                    ctx.arc(350, 200, 25, Math.atan2(-100,-90), Math.atan2(-100,-90)+Math.PI/3);
-                    ctx.stroke();
-                    ctx.fillText("∠2 = ?", 330, 220);
+                    ctx.fillText("∠1 = 130°", 280, 110);
+                    
+                    // ∠2 标注
+                    ctx.fillText("∠2 = ?", 340, 180);
                 }
             },
             {
@@ -258,19 +257,30 @@
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
+                    ctx.fillStyle = "#00ff41";
                     ctx.lineWidth = 2;
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("a", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(150, 50); ctx.lineTo(450, 300); ctx.stroke();
-                    ctx.beginPath(); ctx.arc(270, 150, 25, Math.atan2(100,120), Math.atan2(100,120)+Math.PI/4);
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
                     ctx.stroke();
+                    ctx.fillText("a", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("b", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(150, 30);
+                    ctx.lineTo(450, 290);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 75°", 240, 130);
-                    ctx.beginPath(); ctx.arc(330, 200, 25, Math.atan2(-100,-120), Math.atan2(-100,-120)+Math.PI/4);
-                    ctx.stroke();
-                    ctx.fillText("∠2 = ?", 310, 220);
+                    ctx.fillText("∠1 = 75°", 230, 100);
+                    ctx.fillText("∠2 = ?", 330, 190);
                 }
             },
             {
@@ -279,18 +289,30 @@
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("a", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(300, 30); ctx.lineTo(300, 320); ctx.stroke();
-                    ctx.beginPath(); ctx.arc(300, 100, 25, Math.PI/2, Math.PI);
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
                     ctx.stroke();
+                    ctx.fillText("a", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("b", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(300, 30);
+                    ctx.lineTo(300, 290);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 110°", 260, 85);
-                    ctx.beginPath(); ctx.arc(300, 100, 25, 0, Math.PI/2);
-                    ctx.stroke();
-                    ctx.fillText("∠2 = ?", 310, 85);
+                    ctx.fillText("∠1 = 110°", 250, 80);
+                    ctx.fillText("∠2 = ?", 310, 80);
                 }
             },
             {
@@ -299,18 +321,30 @@
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("a", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(150, 50); ctx.lineTo(450, 300); ctx.stroke();
-                    ctx.beginPath(); ctx.arc(240, 150, 25, Math.atan2(100,90), Math.atan2(100,90)+Math.PI/6);
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
                     ctx.stroke();
+                    ctx.fillText("a", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("b", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(180, 30);
+                    ctx.lineTo(420, 290);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 55°", 200, 125);
-                    ctx.beginPath(); ctx.arc(310, 200, 25, Math.atan2(-100,-90), Math.atan2(-100,-90)+Math.PI/1.2);
-                    ctx.stroke();
-                    ctx.fillText("∠2 = ?", 290, 230);
+                    ctx.fillText("∠1 = 55°", 220, 100);
+                    ctx.fillText("∠2 = ?", 350, 200);
                 }
             },
             {
@@ -319,18 +353,30 @@
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("a", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(100, 80); ctx.lineTo(500, 270); ctx.stroke();
-                    ctx.beginPath(); ctx.arc(300, 175, 25, Math.atan2(95,200), Math.atan2(95,200)+Math.PI/4);
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
                     ctx.stroke();
+                    ctx.fillText("a", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("b", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(120, 30);
+                    ctx.lineTo(480, 290);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 95°", 270, 150);
-                    ctx.beginPath(); ctx.arc(350, 210, 25, Math.atan2(-95,-200), Math.atan2(-95,-200)+Math.PI/4);
-                    ctx.stroke();
-                    ctx.fillText("∠2 = ?", 330, 230);
+                    ctx.fillText("∠1 = 95°", 240, 100);
+                    ctx.fillText("∠2 = ?", 370, 200);
                 }
             },
             {
@@ -339,190 +385,277 @@
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("a", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(250, 40); ctx.lineTo(250, 310); ctx.stroke();
-                    ctx.beginPath(); ctx.arc(250, 100, 25, Math.PI/2, Math.PI/4);
-                    ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 35°", 210, 80);
-                    ctx.beginPath(); ctx.arc(250, 250, 25, -Math.PI/2, -Math.PI/4);
-                    ctx.stroke();
-                    ctx.fillText("∠2 = ?", 260, 260);
-                }
-            },
-            {
-                text: "如图，已知直线a ∥ b，∠1 = 120°，求∠2 + ∠3 = ? (∠2和∠3是同位角)",
-                answer: "240",
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 80); ctx.lineTo(550, 80); ctx.stroke();
-                    ctx.fillText("a", 30, 75);
-                    ctx.beginPath(); ctx.moveTo(50, 180); ctx.lineTo(550, 180); ctx.stroke();
-                    ctx.fillText("b", 30, 175);
-                    ctx.beginPath(); ctx.moveTo(50, 280); ctx.lineTo(550, 280); ctx.stroke();
-                    ctx.fillText("c", 30, 275);
-                    ctx.beginPath(); ctx.moveTo(300, 30); ctx.lineTo(300, 330); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 120°", 260, 50);
-                    ctx.fillText("∠2", 310, 110);
-                    ctx.fillText("∠3", 310, 210);
-                }
-            },
-            {
-                text: "如图，已知DE ∥ BC，AD = 3cm, DB = 6cm, AE = 4cm，求EC的长度？",
-                answer: "8",
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(300, 50); ctx.lineTo(150, 280); ctx.lineTo(450, 280); ctx.closePath();
-                    ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(200, 165); ctx.lineTo(400, 165);
-                    ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("A", 310, 45);
-                    ctx.fillText("D", 185, 160);
-                    ctx.fillText("E", 405, 160);
-                    ctx.fillText("B", 135, 290);
-                    ctx.fillText("C", 460, 290);
                     ctx.fillStyle = "#00ff41";
-                    ctx.fillText("AD = 3cm", 250, 80);
-                    ctx.fillText("DB = 6cm", 150, 200);
-                    ctx.fillText("AE = 4cm", 380, 80);
-                    ctx.fillText("EC = ?", 410, 240);
-                }
-            },
-            {
-                text: "如图，已知AB ∥ CD，∠A = 70°，∠C = 50°，求∠AEC的度数？",
-                answer: "120",
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(200, 100); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(400, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(200, 100); ctx.lineTo(400, 250); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(200, 100); ctx.lineTo(350, 100); ctx.stroke();
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
+                    ctx.stroke();
+                    ctx.fillText("a", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("b", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(300, 30);
+                    ctx.lineTo(300, 290);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("A", 180, 95);
-                    ctx.fillText("B", 360, 95);
-                    ctx.fillText("C", 390, 260);
-                    ctx.fillText("D", 560, 260);
-                    ctx.fillText("E", 290, 190);
-                    ctx.fillText("∠A = 70°", 140, 80);
-                    ctx.fillText("∠C = 50°", 420, 230);
-                    ctx.fillText("∠AEC = ?", 270, 170);
+                    ctx.fillText("∠1 = 35°", 240, 80);
+                    ctx.fillText("∠2 = ?", 310, 240);
                 }
             },
             {
-                text: "如图，已知AB ∥ CD，∠BAE = 65°，∠DCE = 45°，求∠AEC的度数？",
-                answer: "110",
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(80, 120); ctx.lineTo(250, 120); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(350, 280); ctx.lineTo(520, 280); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(250, 120); ctx.lineTo(350, 280); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("A", 220, 115);
-                    ctx.fillText("B", 260, 115);
-                    ctx.fillText("C", 340, 290);
-                    ctx.fillText("D", 530, 290);
-                    ctx.fillText("E", 290, 210);
-                    ctx.fillText("∠BAE = 65°", 170, 100);
-                    ctx.fillText("∠DCE = 45°", 380, 270);
-                    ctx.fillText("∠AEC = ?", 270, 190);
-                }
-            },
-            {
-                text: "如图，已知l1 ∥ l2，∠1 = 3x+15°，∠2 = 2x+25°，且∠1和∠2是同位角，求x的值？",
+                text: "如图，已知DE ∥ BC，AD = 4cm, DB = 8cm, AE = 5cm，求EC的长度？",
                 answer: "10",
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("l₁", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("l₂", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(200, 50); ctx.lineTo(400, 300); ctx.stroke();
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    // 三角形ABC
+                    ctx.beginPath();
+                    ctx.moveTo(300, 40);
+                    ctx.lineTo(120, 260);
+                    ctx.lineTo(480, 260);
+                    ctx.closePath();
+                    ctx.stroke();
+                    
+                    // 线段DE
+                    ctx.beginPath();
+                    ctx.moveTo(240, 150);
+                    ctx.lineTo(360, 150);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 3x+15°", 260, 140);
-                    ctx.fillText("∠2 = 2x+25°", 320, 200);
+                    ctx.fillText("A", 310, 35);
+                    ctx.fillText("D", 220, 145);
+                    ctx.fillText("E", 370, 145);
+                    ctx.fillText("B", 100, 270);
+                    ctx.fillText("C", 490, 270);
+                    
+                    ctx.fillStyle = "#00ff41";
+                    ctx.fillText("AD = 4cm", 260, 80);
+                    ctx.fillText("DB = 8cm", 150, 200);
+                    ctx.fillText("AE = 5cm", 390, 80);
+                    ctx.fillText("EC = ?", 420, 200);
                 }
             },
             {
-                text: "如图，已知a ∥ b，一个角的度数是另一个角的2倍，且这两个角是同旁内角，求较大角的度数？",
-                answer: "120",
+                text: "如图，已知AB ∥ CD，∠A = 65°，∠C = 45°，求∠AEC的度数？",
+                answer: "110",
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("a", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("b", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(150, 50); ctx.lineTo(450, 300); ctx.stroke();
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(280, 100);
+                    ctx.stroke();
+                    ctx.fillText("A", 65, 95);
+                    ctx.fillText("B", 290, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(320, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("C", 310, 215);
+                    ctx.fillText("D", 530, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(280, 100);
+                    ctx.lineTo(320, 220);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 : ∠2 = 1 : 2", 270, 150);
+                    ctx.fillText("E", 295, 170);
+                    ctx.fillText("∠A = 65°", 160, 80);
+                    ctx.fillText("∠C = 45°", 380, 200);
+                    ctx.fillText("∠AEC = ?", 280, 150);
+                }
+            },
+            {
+                text: "如图，已知AB ∥ CD，∠BAE = 70°，∠DCE = 40°，求∠AEC的度数？",
+                answer: "110",
+                draw: function(ctx, w, h) {
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.strokeStyle = "#00ff41";
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 80);
+                    ctx.lineTo(280, 80);
+                    ctx.stroke();
+                    ctx.fillText("A", 65, 75);
+                    ctx.fillText("B", 290, 75);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(320, 240);
+                    ctx.lineTo(520, 240);
+                    ctx.stroke();
+                    ctx.fillText("C", 310, 235);
+                    ctx.fillText("D", 530, 235);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(280, 80);
+                    ctx.lineTo(320, 240);
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = "#ff00ff";
+                    ctx.fillText("E", 295, 170);
+                    ctx.fillText("∠BAE = 70°", 150, 60);
+                    ctx.fillText("∠DCE = 40°", 380, 220);
+                    ctx.fillText("∠AEC = ?", 280, 140);
+                }
+            },
+            {
+                text: "如图，已知AB ∥ CD，∠BAE = 55°，∠DCE = 35°，求∠AEC的度数？",
+                answer: "90",
+                draw: function(ctx, w, h) {
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.strokeStyle = "#00ff41";
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 80);
+                    ctx.lineTo(300, 80);
+                    ctx.stroke();
+                    ctx.fillText("A", 65, 75);
+                    ctx.fillText("B", 310, 75);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(300, 240);
+                    ctx.lineTo(520, 240);
+                    ctx.stroke();
+                    ctx.fillText("C", 290, 235);
+                    ctx.fillText("D", 530, 235);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(300, 80);
+                    ctx.lineTo(300, 240);
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = "#ff00ff";
+                    ctx.fillText("E", 310, 170);
+                    ctx.fillText("∠BAE = 55°", 170, 60);
+                    ctx.fillText("∠DCE = 35°", 370, 220);
+                    ctx.fillText("∠AEC = ?", 320, 150);
+                }
+            },
+            {
+                text: "如图，已知l1 ∥ l2，∠1 = 4x+10°，∠2 = 2x+30°，且∠1和∠2是同位角，求x的值？",
+                answer: "10",
+                draw: function(ctx, w, h) {
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.strokeStyle = "#00ff41";
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
+                    ctx.stroke();
+                    ctx.fillText("l₁", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("l₂", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(200, 30);
+                    ctx.lineTo(400, 290);
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = "#ff00ff";
+                    ctx.fillText("∠1 = 4x+10°", 260, 110);
+                    ctx.fillText("∠2 = 2x+30°", 320, 190);
+                }
+            },
+            {
+                text: "如图，已知a ∥ b，一个角是另一个角的3倍，且这两个角是同旁内角，求较大角的度数？",
+                answer: "135",
+                draw: function(ctx, w, h) {
+                    ctx.clearRect(0, 0, w, h);
+                    ctx.strokeStyle = "#00ff41";
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 100);
+                    ctx.lineTo(520, 100);
+                    ctx.stroke();
+                    ctx.fillText("a", 60, 95);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(80, 220);
+                    ctx.lineTo(520, 220);
+                    ctx.stroke();
+                    ctx.fillText("b", 60, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(150, 30);
+                    ctx.lineTo(450, 290);
+                    ctx.stroke();
+                    
+                    ctx.fillStyle = "#ff00ff";
+                    ctx.fillText("∠1 : ∠2 = 1 : 3", 270, 150);
                     ctx.fillText("∠1 + ∠2 = 180°", 280, 180);
                     ctx.fillText("求较大角 = ?", 290, 210);
                 }
             },
             {
-                text: "如图，已知直线AB ∥ CD，EF是截线，∠AEF = 2x+30°，∠EFC = 4x-30°，求∠AEF的度数？",
+                text: "如图，已知直线AB ∥ CD，EF是截线，∠AEF = 3x+15°，∠EFC = 5x-15°，求∠AEF的度数？",
                 answer: "90",
                 draw: function(ctx, w, h) {
                     ctx.clearRect(0, 0, w, h);
                     ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(100, 80); ctx.lineTo(500, 80); ctx.stroke();
+                    ctx.fillStyle = "#00ff41";
+                    ctx.lineWidth = 2;
+                    ctx.font = "14px monospace";
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(100, 80);
+                    ctx.lineTo(300, 80);
+                    ctx.stroke();
                     ctx.fillText("A", 85, 75);
-                    ctx.fillText("B", 510, 75);
-                    ctx.beginPath(); ctx.moveTo(100, 250); ctx.lineTo(500, 250); ctx.stroke();
-                    ctx.fillText("C", 85, 245);
-                    ctx.fillText("D", 510, 245);
-                    ctx.beginPath(); ctx.moveTo(300, 30); ctx.lineTo(200, 300); ctx.stroke();
-                    ctx.fillText("E", 290, 25);
-                    ctx.fillText("F", 190, 310);
+                    ctx.fillText("B", 310, 75);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(300, 220);
+                    ctx.lineTo(500, 220);
+                    ctx.stroke();
+                    ctx.fillText("C", 290, 215);
+                    ctx.fillText("D", 510, 215);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(200, 30);
+                    ctx.lineTo(400, 270);
+                    ctx.stroke();
+                    
                     ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠AEF = 2x+30°", 310, 70);
-                    ctx.fillText("∠EFC = 4x-30°", 220, 210);
-                }
-            },
-            {
-                text: "如图，已知AB ∥ CD，点E在AB、CD之间，∠BAE = 55°，∠ECD = 35°，求∠AEC的度数？",
-                answer: "90",
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(100, 100); ctx.lineTo(400, 100); ctx.stroke();
-                    ctx.fillText("A", 85, 95);
-                    ctx.fillText("B", 410, 95);
-                    ctx.beginPath(); ctx.moveTo(150, 250); ctx.lineTo(450, 250); ctx.stroke();
-                    ctx.fillText("C", 135, 245);
-                    ctx.fillText("D", 460, 245);
-                    ctx.beginPath(); ctx.moveTo(250, 100); ctx.lineTo(350, 250); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("E", 290, 180);
-                    ctx.fillText("∠BAE = 55°", 220, 85);
-                    ctx.fillText("∠ECD = 35°", 360, 230);
-                    ctx.fillText("∠AEC = ?", 300, 160);
-                }
-            },
-            {
-                text: "如图，已知直线l1 ∥ l2，∠1 = 5x-10°，∠2 = 3x+20°，且∠1和∠2是内错角，求∠1的度数？",
-                answer: "65",
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.beginPath(); ctx.moveTo(50, 100); ctx.lineTo(550, 100); ctx.stroke();
-                    ctx.fillText("l₁", 30, 95);
-                    ctx.beginPath(); ctx.moveTo(50, 250); ctx.lineTo(550, 250); ctx.stroke();
-                    ctx.fillText("l₂", 30, 245);
-                    ctx.beginPath(); ctx.moveTo(250, 50); ctx.lineTo(350, 300); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 5x-10°", 270, 130);
-                    ctx.fillText("∠2 = 3x+20°", 290, 220);
+                    ctx.fillText("E", 190, 25);
+                    ctx.fillText("F", 410, 280);
+                    ctx.fillText("∠AEF = 3x+15°", 220, 60);
+                    ctx.fillText("∠EFC = 5x-15°", 350, 200);
                 }
             }
         ];
@@ -530,67 +663,40 @@
         let currentQuestion = null;
         let canvas = null;
         let ctx = null;
+        let warningActive = false;
         
-        // 防F12检测
+        // 防作弊检测 - 优化版，减少误判
         (function() {
+            let devToolsOpened = false;
+            
+            // 只检测F12键
             document.addEventListener('keydown', function(e) {
+                if (warningActive) return;
+                
+                // 只检测F12
                 if (e.key === 'F12' || e.keyCode === 123) {
                     e.preventDefault();
-                    showWarning();
-                }
-                if ((e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
-                    (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
-                    e.preventDefault();
-                    showWarning();
-                }
-                if ((e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
-                    (e.ctrlKey && e.keyCode === 85)) {
-                    e.preventDefault();
-                    showWarning();
-                }
-                if ((e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
-                    (e.ctrlKey && e.shiftKey && e.keyCode === 74)) {
-                    e.preventDefault();
+                    warningActive = true;
                     showWarning();
                 }
             });
             
+            // 轻量级检测右键菜单（可选，不强制阻止）
             document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                showWarning();
+                // 不阻止右键，只记录
+                return true;
             });
             
-            let devtools = /./;
-            devtools.toString = function() {
-                showWarning();
-                return '';
-            };
-            
-            setInterval(function() {
-                if (typeof console !== 'undefined') {
-                    console.log(devtools);
-                }
-            }, 1000);
-            
-            document.addEventListener('copy', function(e) {
-                e.preventDefault();
-                showWarning();
-            });
-            
-            document.addEventListener('cut', function(e) {
-                e.preventDefault();
-                showWarning();
-            });
+            // 移除过于敏感的检测
+        
         })();
         
         function showWarning() {
-            sessionStorage.setItem('returnToVerify', 'true');
             document.body.innerHTML = `
                 <div class="warning-container">
                     <h1>⚠️ 警告 ⚠️</h1>
-                    <p>检测到您尝试打开开发者工具/查看源代码/复制内容！</p>
-                    <p>请关闭开发者工具后继续验证。</p>
-                    <p style="color: #ff6666; font-size: 14px;">作弊行为是不被允许的</p>
+                    <p>请关闭开发者工具后继续验证！</p>
+                    <p style="color: #ff6666; font-size: 14px;">请尊重验证流程，不要尝试作弊</p>
                     <button class="confirm-btn" onclick="returnToVerify()">我已知晓，返回验证</button>
                 </div>
             `;
@@ -622,9 +728,11 @@
             document.getElementById('answer').value = '';
             document.getElementById('message').style.display = 'none';
             document.getElementById('questionStats').innerHTML = `📐 题库共 ${questions.length} 道题 | 随机抽题`;
+            warningActive = false;
             
             // 绘制图形
             if (canvas && ctx) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawQuestion();
             }
         }
