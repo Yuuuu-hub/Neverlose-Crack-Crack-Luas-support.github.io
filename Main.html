@@ -9,6 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            user-select: none; /* 禁止全选 */
         }
         
         body {
@@ -29,6 +30,7 @@
             max-width: 800px;
             width: 100%;
             text-align: center;
+            position: relative;
         }
         
         h1 {
@@ -78,6 +80,20 @@
             opacity: 0.9;
         }
         
+        /* 透明小字样式 - 不可选中 */
+        .footer-note {
+            margin-top: 50px;
+            padding-top: 20px;
+            font-size: 11px;
+            color: rgba(0, 0, 0, 0.3);
+            text-align: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            pointer-events: none; /* 禁止点击/选中 */
+        }
+        
         @media (max-width: 600px) {
             .container {
                 padding: 30px 20px;
@@ -89,6 +105,10 @@
             
             .options {
                 flex-direction: column;
+            }
+            
+            .footer-note {
+                font-size: 9px;
             }
         }
     </style>
@@ -108,6 +128,11 @@
                 <h2>🔫 Only Scout Lua</h2>
                 <p>点击查看详情和下载</p>
             </a>
+        </div>
+        
+        <!-- 透明小字 - 不可选中 -->
+        <div class="footer-note">
+            Lua均为网上所得，并非本人制作
         </div>
     </div>
 </body>
