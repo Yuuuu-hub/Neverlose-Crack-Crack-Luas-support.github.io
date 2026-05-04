@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>密码验证 - Cathode Lua下载</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: radial-gradient(circle at center, #0a0a2a 0%, #000 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #00ff41;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 650px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.2);
+        }
+        
+        h1 {
+            color: #00ff41;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 0 0 5px #00ff41;
+        }
+        
+        .question {
+            background: rgba(0, 255, 65, 0.1);
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff00ff;
+            line-height: 1.4;
+        }
+        
+        .input-area {
+            margin: 20px 0;
+        }
+        
+        input {
+            width: 250px;
+            padding: 12px;
+            font-size: 18px;
+            background: #111;
+            border: 2px solid #00ff41;
+            color: #00ff41;
+            text-align: center;
+            font-family: monospace;
+            border-radius: 5px;
+        }
+        
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 10px #00ff41;
+        }
+        
+        button {
+            padding: 12px 30px;
+            background: #00ff41;
+            color: #000;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-family: monospace;
+        }
+        
+        button:hover {
+            background: #ff00ff;
+            color: #fff;
+            transform: scale(1.05);
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .error {
+            background: rgba(255, 0, 0, 0.3);
+            color: #ff6666;
+            border: 1px solid #ff0000;
+        }
+        
+        .success {
+            background: rgba(0, 255, 0, 0.3);
+            color: #00ff41;
+            border: 1px solid #00ff41;
+        }
+        
+        .hint {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #888;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .back-link:hover {
+            color: #00ff41;
+        }
+        
+        /* 防作弊警告页面样式 */
+        .warning-container {
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+        }
+        
+        .warning-container h1 {
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+        }
+        
+        .warning-container p {
+            color: #fff;
+            margin: 30px 0;
+            font-size: 18px;
+        }
+        
+        .confirm-btn {
+            background: #ff0000;
+            color: #fff;
+        }
+        
+        .confirm-btn:hover {
+            background: #00ff41;
+            color: #000;
+        }
+    </style>
+</head>
+<body id="mainBody">
+    <!-- 正常验证页面 -->
+    <div id="verifyPage" class="container">
+        <h1>🔐 下载验证</h1>
+        <p style="color: #888; margin-bottom: 10px;">请解答以下几何题获取下载密码</p>
+        
+        <div class="question" id="question">
+            正在生成题目...
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="answer" placeholder="输入答案" autocomplete="off">
+            <br>
+            <button onclick="checkAnswer()">验证并下载</button>
+            <button onclick="resetQuestion()">换一题</button>
+        </div>
+        
+        <div id="message" class="message"></div>
+        <div class="hint">💡 提示：答案格式请参考题目要求 (数字或带根号)</div>
+        <a href="scout-head.html" class="back-link">← 返回上一页</a>
+    </div>
+
+    <script>
+        // 50道几何题题库 (不显示答案)
+        const questions = [
+            // 勾股定理系列
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 3cm，BC = 4cm，求斜边AB的长度？(输入数字)", answer: "5" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 5cm，BC = 12cm，求斜边AB的长度？(输入数字)", answer: "13" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 8cm，BC = 15cm，求斜边AB的长度？(输入数字)", answer: "17" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 7cm，BC = 24cm，求斜边AB的长度？(输入数字)", answer: "25" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 9cm，BC = 40cm，求斜边AB的长度？(输入数字)", answer: "41" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 20cm，BC = 21cm，求斜边AB的长度？(输入数字)", answer: "29" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 12cm，BC = 35cm，求斜边AB的长度？(输入数字)", answer: "37" },
+            { text: "如图，在直角三角形ABC中，∠C = 90°，AC = 11cm，BC = 60cm，求斜边AB的长度？(输入数字)", answer: "61" },
+            
+            // 正方形对角线系列
+            { text: "如图，正方形ABCD的边长为4cm，对角线AC的长度是多少？(答案保留根号，格式：数字√2，如4√2)", answer: "4√2" },
+            { text: "如图，正方形ABCD的边长为6cm，对角线AC的长度是多少？(答案保留根号，格式：数字√2，如6√2)", answer: "6√2" },
+            { text: "如图，正方形ABCD的边长为8cm，对角线AC的长度是多少？(答案保留根号，格式：数字√2，如8√2)", answer: "8√2" },
+            { text: "如图，正方形ABCD的边长为10cm，对角线AC的长度是多少？(答案保留根号，格式：数字√2，如10√2)", answer: "10√2" },
+            { text: "如图，正方形ABCD的边长为5cm，对角线AC的长度是多少？(答案保留根号，格式：数字√2，如5√2)", answer: "5√2" },
+            { text: "如图，正方形ABCD的边长为12cm，对角线AC的长度是多少？(答案保留根号，格式：数字√2，如12√2)", answer: "12√2" },
+            
+            // 等边三角形高系列
+            { text: "如图，等边三角形的边长为6cm，它的高是多少？(答案保留根号，格式：数字√3，如3√3)", answer: "3√3" },
+            { text: "如图，等边三角形的边长为8cm，它的高是多少？(答案保留根号，格式：数字√3，如4√3)", answer: "4√3" },
+            { text: "如图，等边三角形的边长为10cm，它的高是多少？(答案保留根号，格式：数字√3，如5√3)", answer: "5√3" },
+            { text: "如图，等边三角形的边长为12cm，它的高是多少？(答案保留根号，格式：数字√3，如6√3)", answer: "6√3" },
+            { text: "如图，等边三角形的边长为4cm，它的高是多少？(答案保留根号，格式：数字√3，如2√3)", answer: "2√3" },
+            { text: "如图，等边三角形的边长为14cm，它的高是多少？(答案保留根号，格式：数字√3，如7√3)", answer: "7√3" },
+            
+            // 矩形对角线系列
+            { text: "如图，矩形长6cm，宽8cm，对角线长度为多少？(输入数字)", answer: "10" },
+            { text: "如图，矩形长9cm，宽12cm，对角线长度为多少？(输入数字)", answer: "15" },
+            { text: "如图，矩形长5cm，宽12cm，对角线长度为多少？(输入数字)", answer: "13" },
+            { text: "如图，矩形长8cm，宽15cm，对角线长度为多少？(输入数字)", answer: "17" },
+            { text: "如图，矩形长7cm，宽24cm，对角线长度为多少？(输入数字)", answer: "25" },
+            { text: "如图，矩形长10cm，宽24cm，对角线长度为多少？(输入数字)", answer: "26" },
+            { text: "如图，矩形长20cm，宽21cm，对角线长度为多少？(输入数字)", answer: "29" },
+            
+            // 圆的直径/半径系列
+            { text: "如图，圆的半径为6cm，直径的长度是多少厘米？(输入数字)", answer: "12" },
+            { text: "如图，圆的半径为8cm，直径的长度是多少厘米？(输入数字)", answer: "16" },
+            { text: "如图，圆的半径为10cm，直径的长度是多少厘米？(输入数字)", answer: "20" },
+            { text: "如图，圆的半径为3.5cm，直径的长度是多少厘米？(输入数字，保留一位小数)", answer: "7" },
+            { text: "如图，圆的直径为24cm，半径的长度是多少厘米？(输入数字)", answer: "12" },
+            { text: "如图，圆的直径为30cm，半径的长度是多少厘米？(输入数字)", answer: "15" },
+            
+            // 30-60-90特殊三角形
+            { text: "如图，在30°-60°-90°三角形中，30°角对边长度为5，求斜边长度？(输入数字)", answer: "10" },
+            { text: "如图，在30°-60°-90°三角形中，60°角对边长度为6√3，求30°角对边长度？(输入数字)", answer: "6" },
+            { text: "如图，在30°-60°-90°三角形中，斜边长度为16，求30°角对边长度？(输入数字)", answer: "8" },
+            
+            // 45-45-90等腰直角三角形
+            { text: "如图，等腰直角三角形直角边长为7，求斜边长度？(答案保留根号，格式：数字√2，如7√2)", answer: "7√2" },
+            { text: "如图，等腰直角三角形直角边长为9，求斜边长度？(答案保留根号，格式：数字√2，如9√2)", answer: "9√2" },
+            { text: "如图，等腰直角三角形斜边长为10√2，求直角边长？(输入数字)", answer: "10" },
+            
+            // 梯形中位线
+            { text: "如图，梯形上底8cm，下底14cm，中位线长度是多少？(输入数字)", answer: "11" },
+            { text: "如图，梯形上底5cm，下底17cm，中位线长度是多少？(输入数字)", answer: "11" },
+            
+            // 三角形面积相关
+            { text: "如图，三角形底边长10cm，高为8cm，面积是多少平方厘米？(输入数字)", answer: "40" },
+            { text: "如图，三角形底边长15cm，高为6cm，面积是多少平方厘米？(输入数字)", answer: "45" },
+            
+            // 圆周相关
+            { text: "如图，圆的半径为7cm，周长是多少？(π取3.14，输入数字，保留整数)", answer: "44" },
+            { text: "如图，圆的半径为10cm，圆面积是多少？(π取3.14，输入数字)", answer: "314" },
+            
+            // 正方体体对角线
+            { text: "如图，正方体棱长为3cm，体对角线长度是多少？(保留根号，格式：数字√3，如3√3)", answer: "3√3" },
+            { text: "如图，正方体棱长为5cm，体对角线长度是多少？(保留根号，格式：数字√3，如5√3)", answer: "5√3" },
+            
+            // 球的体积/表面积 (简单)
+            { text: "如图，球半径为3cm，球表面积是多少？(公式4πr²，π取3.14，输入数字)", answer: "113.04" },
+            
+            // 圆柱体积
+            { text: "如图，圆柱底面半径5cm，高10cm，体积是多少？(π取3.14，输入数字)", answer: "785" },
+            
+            // 圆锥体积
+            { text: "如图，圆锥底面半径6cm，高9cm，体积是多少？(π取3.14，输入数字)", answer: "339.12" },
+            
+            // 更多勾股数
+            { text: "如图，直角三角形两直角边分别为16和30，斜边长是多少？(输入数字)", answer: "34" },
+            { text: "如图，直角三角形两直角边分别为18和24，斜边长是多少？(输入数字)", answer: "30" },
+            { text: "如图，直角三角形两直角边分别为10和24，斜边长是多少？(输入数字)", answer: "26" }
+        ];
+        
+        let currentQuestion = null;
+        
+        // 防F12检测
+        (function() {
+            // 检测F12键
+            document.addEventListener('keydown', function(e) {
+                // F12键的keyCode是123
+                if (e.key === 'F12' || e.keyCode === 123) {
+                    e.preventDefault();
+                    showWarning();
+                }
+                // 检测Ctrl+Shift+I (开发者工具)
+                if ((e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i')) ||
+                    (e.ctrlKey && e.shiftKey && e.keyCode === 73)) {
+                    e.preventDefault();
+                    showWarning();
+                }
+                // 检测Ctrl+U (查看源代码)
+                if ((e.ctrlKey && (e.key === 'U' || e.key === 'u')) ||
+                    (e.ctrlKey && e.keyCode === 85)) {
+                    e.preventDefault();
+                    showWarning();
+                }
+                // 检测Ctrl+Shift+J (控制台)
+                if ((e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j')) ||
+                    (e.ctrlKey && e.shiftKey && e.keyCode === 74)) {
+                    e.preventDefault();
+                    showWarning();
+                }
+            });
+            
+            // 检测右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showWarning();
+            });
+            
+            // 检测开发者工具打开 (通过窗口大小变化检测)
+            let devtools = /./;
+            devtools.toString = function() {
+                showWarning();
+                return '';
+            };
+            
+            // 定期检测控制台是否打开
+            setInterval(function() {
+                if (typeof console !== 'undefined') {
+                    // 尝试在控制台输出会触发toString
+                    console.log(devtools);
+                }
+            }, 1000);
+            
+            // 检测复制事件
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                showWarning();
+            });
+            
+            // 检测剪切事件
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+                showWarning();
+            });
+        })();
+        
+        // 显示警告页面
+        function showWarning() {
+            // 保存当前页面状态到sessionStorage
+            sessionStorage.setItem('returnToVerify', 'true');
+            
+            // 替换页面内容为警告页面
+            document.body.innerHTML = `
+                <div class="warning-container">
+                    <h1>⚠️ 警告 ⚠️</h1>
+                    <p>检测到您尝试打开开发者工具/查看源代码/复制内容！</p>
+                    <p>请关闭开发者工具后继续验证。</p>
+                    <p style="color: #ff6666; font-size: 14px;">作弊行为是不被允许的</p>
+                    <button class="confirm-btn" onclick="returnToVerify()">我已知晓，返回验证</button>
+                </div>
+            `;
+            document.body.style.background = "radial-gradient(circle at center, #0a0a2a 0%, #000 100%)";
+            document.body.style.minHeight = "100vh";
+            document.body.style.display = "flex";
+            document.body.style.justifyContent = "center";
+            document.body.style.alignItems = "center";
+        }
+        
+        // 返回验证页面
+        function returnToVerify() {
+            // 重新加载页面
+            window.location.reload();
+        }
+        
+        function getRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            return questions[randomIndex];
+        }
+        
+        function displayQuestion() {
+            currentQuestion = getRandomQuestion();
+            document.getElementById('question').innerHTML = currentQuestion.text;
+            document.getElementById('answer').value = '';
+            document.getElementById('message').style.display = 'none';
+        }
+        
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answer').value.trim().toLowerCase();
+            const correctAnswer = currentQuestion.answer.toLowerCase();
+            
+            // 标准化比较（忽略空格）
+            const normalizedUser = userAnswer.replace(/\s/g, '');
+            const normalizedCorrect = correctAnswer.replace(/\s/g, '');
+            
+            if (normalizedUser === normalizedCorrect) {
+                // 答案正确
+                document.getElementById('message').className = 'message success';
+                document.getElementById('message').innerHTML = '✅ 验证成功！密码是：djaxc<br>正在跳转到下载链接...';
+                document.getElementById('message').style.display = 'block';
+                
+                // 记录验证成功
+                sessionStorage.setItem('verified', 'true');
+                
+                // 2秒后跳转到下载链接
+                setTimeout(function() {
+                    window.location.href = 'https://wwbbe.lanzoub.com/ipGlu3ophpdi';
+                }, 2000);
+            } else {
+                // 答案错误
+                document.getElementById('message').className = 'message error';
+                document.getElementById('message').innerHTML = '❌ 答案错误，请重新计算或点击"换一题"';
+                document.getElementById('message').style.display = 'block';
+                
+                // 震动效果
+                const input = document.getElementById('answer');
+                input.style.border = '2px solid #ff0000';
+                setTimeout(() => {
+                    input.style.border = '2px solid #00ff41';
+                }, 500);
+            }
+        }
+        
+        function resetQuestion() {
+            displayQuestion();
+            // 清空错误记录
+            sessionStorage.removeItem('verified');
+        }
+        
+        // 页面加载时显示随机题目
+        displayQuestion();
+        
+        // 回车键提交
+        document.getElementById('answer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // 如果是从警告页面返回，重新初始化防检测
+        if (sessionStorage.getItem('returnToVerify')) {
+            sessionStorage.removeItem('returnToVerify');
+        }
+    </script>
+</body>
+</html>
