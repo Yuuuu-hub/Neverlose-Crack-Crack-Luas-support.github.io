@@ -39,30 +39,15 @@
             text-shadow: 0 0 5px #00ff41;
         }
         
-        .canvas-area {
-            background: #0a0a1a;
-            border: 1px solid #00ff41;
-            border-radius: 10px;
-            margin: 20px 0;
-            padding: 10px;
-        }
-        
-        canvas {
-            background: #0a0a1a;
-            display: block;
-            margin: 0 auto;
-            border-radius: 5px;
-        }
-        
         .question {
             background: rgba(0, 255, 65, 0.1);
-            padding: 20px;
-            margin: 20px 0;
+            padding: 25px;
+            margin: 25px 0;
             border-radius: 10px;
             font-size: 18px;
             font-weight: bold;
             color: #ff00ff;
-            line-height: 1.5;
+            line-height: 1.6;
         }
         
         .input-area {
@@ -186,11 +171,7 @@
 <body id="mainBody">
     <div id="verifyPage" class="container">
         <h1>🔐 下载验证 - Cathode Lua</h1>
-        <p style="color: #888; margin-bottom: 10px;">请解答以下题目</p>
-        
-        <div class="canvas-area" id="canvasArea">
-            <canvas id="geometryCanvas" width="600" height="280" style="width:600px;height:280px"></canvas>
-        </div>
+        <p style="color: #888; margin-bottom: 10px;">请解答以下题目（七年级难度）</p>
         
         <div class="question" id="question">
             正在生成题目...
@@ -204,239 +185,120 @@
         </div>
         
         <div id="message" class="message"></div>
-        <div class="hint">💡 提示：密码将在答题正确后显示 | 答案请填写数字（方程题填写较小根）</div>
+        <div class="hint">💡 提示：密码为 djaxc | 不等式题填写解集（如 x&lt;3 或 x&gt;5，填写最小整数解）</div>
         <div class="question-stats" id="questionStats"></div>
         <a href="scout-head.html" class="back-link">← 返回上一页</a>
     </div>
 
     <script>
-        // 题库：7道平行线题 + 5道数论题 + 5道一元二次方程
+        // 题库：10道数论填空题 + 10道一元二次不等式（七年级难度）
         const questions = [
-            // ========== 平行线题 (7道) ==========
+            // ========== 数论填空题 (10道) ==========
             {
-                type: "平行线",
-                text: "如图，已知直线a ∥ b，∠1 = 130°，求∠2的度数？",
-                answer: "50",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(520, 100); ctx.stroke();
-                    ctx.fillText("a", 60, 95);
-                    ctx.beginPath(); ctx.moveTo(80, 220); ctx.lineTo(520, 220); ctx.stroke();
-                    ctx.fillText("b", 60, 215);
-                    ctx.beginPath(); ctx.moveTo(200, 30); ctx.lineTo(400, 290); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 130°", 280, 110);
-                    ctx.fillText("∠2 = ?", 340, 180);
-                }
+                type: "数论",
+                text: "求1到100之间所有奇数的和是多少？",
+                answer: "2500"
             },
             {
-                type: "平行线",
-                text: "如图，已知直线a ∥ b，∠1 = 75°，求∠2的度数？",
-                answer: "75",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(520, 100); ctx.stroke();
-                    ctx.fillText("a", 60, 95);
-                    ctx.beginPath(); ctx.moveTo(80, 220); ctx.lineTo(520, 220); ctx.stroke();
-                    ctx.fillText("b", 60, 215);
-                    ctx.beginPath(); ctx.moveTo(150, 30); ctx.lineTo(450, 290); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 75°", 230, 100);
-                    ctx.fillText("∠2 = ?", 330, 190);
-                }
+                type: "数论",
+                text: "一个数除以7余3，除以9余5，这个数最小是多少？",
+                answer: "59"
             },
             {
-                type: "平行线",
-                text: "如图，已知直线a ∥ b，∠1 = 110°，求∠2的度数？(提示：邻补角)",
-                answer: "70",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(520, 100); ctx.stroke();
-                    ctx.fillText("a", 60, 95);
-                    ctx.beginPath(); ctx.moveTo(80, 220); ctx.lineTo(520, 220); ctx.stroke();
-                    ctx.fillText("b", 60, 215);
-                    ctx.beginPath(); ctx.moveTo(300, 30); ctx.lineTo(300, 290); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 110°", 250, 80);
-                    ctx.fillText("∠2 = ?", 310, 80);
-                }
+                type: "数论",
+                text: "求100以内所有能被7整除的数之和？",
+                answer: "735"
             },
             {
-                type: "平行线",
-                text: "如图，已知直线a ∥ b，∠1 = 55°，求∠2的度数？",
-                answer: "125",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(520, 100); ctx.stroke();
-                    ctx.fillText("a", 60, 95);
-                    ctx.beginPath(); ctx.moveTo(80, 220); ctx.lineTo(520, 220); ctx.stroke();
-                    ctx.fillText("b", 60, 215);
-                    ctx.beginPath(); ctx.moveTo(180, 30); ctx.lineTo(420, 290); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 55°", 220, 100);
-                    ctx.fillText("∠2 = ?", 350, 200);
-                }
+                type: "数论",
+                text: "两个质数的和是36，这两个质数的乘积最大是多少？",
+                answer: "323"
             },
             {
-                type: "平行线",
-                text: "如图，已知直线a ∥ b，∠1 = 95°，求∠2的度数？",
-                answer: "95",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(520, 100); ctx.stroke();
-                    ctx.fillText("a", 60, 95);
-                    ctx.beginPath(); ctx.moveTo(80, 220); ctx.lineTo(520, 220); ctx.stroke();
-                    ctx.fillText("b", 60, 215);
-                    ctx.beginPath(); ctx.moveTo(120, 30); ctx.lineTo(480, 290); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("∠1 = 95°", 240, 100);
-                    ctx.fillText("∠2 = ?", 370, 200);
-                }
+                type: "数论",
+                text: "求最小公倍数LCM(8, 12, 18)的值？",
+                answer: "72"
             },
             {
-                type: "平行线",
-                text: "如图，已知AB ∥ CD，∠A = 65°，∠C = 45°，求∠AEC的度数？",
-                answer: "110",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 100); ctx.lineTo(280, 100); ctx.stroke();
-                    ctx.fillText("A", 65, 95);
-                    ctx.fillText("B", 290, 95);
-                    ctx.beginPath(); ctx.moveTo(320, 220); ctx.lineTo(520, 220); ctx.stroke();
-                    ctx.fillText("C", 310, 215);
-                    ctx.fillText("D", 530, 215);
-                    ctx.beginPath(); ctx.moveTo(280, 100); ctx.lineTo(320, 220); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("E", 295, 170);
-                    ctx.fillText("∠A = 65°", 160, 80);
-                    ctx.fillText("∠C = 45°", 380, 200);
-                    ctx.fillText("∠AEC = ?", 280, 150);
-                }
+                type: "数论",
+                text: "一个数既是12的倍数，又是18的倍数，这个数最小是多少？",
+                answer: "36"
             },
             {
-                type: "平行线",
-                text: "如图，已知AB ∥ CD，∠BAE = 55°，∠DCE = 35°，求∠AEC的度数？",
-                answer: "90",
-                hasDrawing: true,
-                draw: function(ctx, w, h) {
-                    ctx.clearRect(0, 0, w, h);
-                    ctx.strokeStyle = "#00ff41";
-                    ctx.fillStyle = "#00ff41";
-                    ctx.lineWidth = 2;
-                    ctx.font = "14px monospace";
-                    ctx.beginPath(); ctx.moveTo(80, 80); ctx.lineTo(300, 80); ctx.stroke();
-                    ctx.fillText("A", 65, 75);
-                    ctx.fillText("B", 310, 75);
-                    ctx.beginPath(); ctx.moveTo(300, 240); ctx.lineTo(520, 240); ctx.stroke();
-                    ctx.fillText("C", 290, 235);
-                    ctx.fillText("D", 530, 235);
-                    ctx.beginPath(); ctx.moveTo(300, 80); ctx.lineTo(300, 240); ctx.stroke();
-                    ctx.fillStyle = "#ff00ff";
-                    ctx.fillText("E", 310, 170);
-                    ctx.fillText("∠BAE = 55°", 170, 60);
-                    ctx.fillText("∠DCE = 35°", 370, 220);
-                    ctx.fillText("∠AEC = ?", 320, 150);
-                }
+                type: "数论",
+                text: "求1到50之间所有能被3或5整除的数之和？",
+                answer: "593"
+            },
+            {
+                type: "数论",
+                text: "两个连续奇数的积是143，求这两个数的和？",
+                answer: "24"
+            },
+            {
+                type: "数论",
+                text: "求最大公因数GCD(48, 60, 72)的值？",
+                answer: "12"
+            },
+            {
+                type: "数论",
+                text: "一个数除以5余2，除以8余5，这个数最小是多少？",
+                answer: "37"
             },
             
-            // ========== 数论题 (5道) ==========
+            // ========== 一元二次不等式 (10道，七年级难度) ==========
             {
-                type: "数论",
-                text: "求100以内所有能被3整除的正整数之和是多少？",
-                answer: "1683",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 5x + 6 > 0，求最小整数解？",
+                answer: "3"
             },
             {
-                type: "数论",
-                text: "一个数除以5余2，除以7余3，除以9余4，这个数最小是多少？",
-                answer: "157",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 4x - 5 < 0，求最大整数解？",
+                answer: "4"
             },
             {
-                type: "数论",
-                text: "求1到100之间所有质数的个数？",
-                answer: "25",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 7x + 10 ≤ 0，求整数解的个数？",
+                answer: "4"
             },
             {
-                type: "数论",
-                text: "两个质数的和是99，这两个质数的乘积是多少？",
-                answer: "194",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 3x - 4 ≥ 0，求最小整数解？",
+                answer: "4"
             },
             {
-                type: "数论",
-                text: "求最小公倍数LCM(12, 18, 24)的值？",
-                answer: "72",
-                hasDrawing: false
-            },
-            
-            // ========== 一元二次方程 (5道) ==========
-            {
-                type: "方程",
-                text: "解方程：x² - 5x + 6 = 0，求较小根？",
-                answer: "2",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 6x + 8 < 0，求整数解之和？",
+                answer: "7"
             },
             {
-                type: "方程",
-                text: "解方程：x² - 7x + 12 = 0，求较小根？",
-                answer: "3",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：2x² - 5x - 3 > 0，求最小整数解？",
+                answer: "3"
             },
             {
-                type: "方程",
-                text: "解方程：2x² - 5x - 3 = 0，求较小根？",
-                answer: "-0.5",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 8x + 15 ≤ 0，求整数解的最大值？",
+                answer: "5"
             },
             {
-                type: "方程",
-                text: "解方程：x² + 6x + 8 = 0，求较小根？",
-                answer: "-4",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 2x - 3 > 0，求最小整数解？",
+                answer: "3"
             },
             {
-                type: "方程",
-                text: "解方程：x² - 4x - 5 = 0，求较小根？",
-                answer: "-1",
-                hasDrawing: false
+                type: "不等式",
+                text: "解不等式：x² - 6x + 5 < 0，求整数解的个数？",
+                answer: "3"
+            },
+            {
+                type: "不等式",
+                text: "解不等式：3x² - 10x - 8 ≤ 0，求最大整数解？",
+                answer: "4"
             }
         ];
         
         let currentQuestion = null;
-        let canvas = null;
-        let ctx = null;
         let warningActive = false;
         
         // 防作弊检测
@@ -476,36 +338,21 @@
             return questions[randomIndex];
         }
         
-        function drawQuestion() {
-            if (currentQuestion.hasDrawing && currentQuestion.draw) {
-                currentQuestion.draw(ctx, canvas.width, canvas.height);
-                document.getElementById('canvasArea').style.display = 'block';
-            } else {
-                document.getElementById('canvasArea').style.display = 'none';
-            }
-        }
-        
         function displayQuestion() {
             currentQuestion = getRandomQuestion();
             document.getElementById('question').innerHTML = currentQuestion.text;
             document.getElementById('answer').value = '';
             document.getElementById('message').style.display = 'none';
-            document.getElementById('questionStats').innerHTML = `📐 题库共 ${questions.length} 道题 | 平行线7题 | 数论5题 | 方程5题 | 随机抽题`;
+            document.getElementById('questionStats').innerHTML = `📐 题库共 ${questions.length} 道题 | 数论10题 | 一元二次不等式10题 | 随机抽题`;
             warningActive = false;
-            
-            if (canvas && ctx) {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawQuestion();
-            }
         }
         
         function checkAnswer() {
             let userAnswer = document.getElementById('answer').value.trim().toLowerCase();
             let correctAnswer = currentQuestion.answer.toLowerCase();
             
-            // 处理小数比较
+            // 处理分数和小数
             if (userAnswer.includes('/')) {
-                // 如果是分数形式，计算数值
                 const parts = userAnswer.split('/');
                 if (parts.length === 2) {
                     userAnswer = (parseFloat(parts[0]) / parseFloat(parts[1])).toString();
@@ -538,11 +385,6 @@
             displayQuestion();
             sessionStorage.removeItem('verified');
         }
-        
-        canvas = document.getElementById('geometryCanvas');
-        ctx = canvas.getContext('2d');
-        ctx.fillStyle = "#00ff41";
-        ctx.font = "14px monospace";
         
         displayQuestion();
         
